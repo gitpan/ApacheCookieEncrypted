@@ -1,0 +1,8 @@
+Revision history for Perl extension Apache::Cookie::Encrypted.
+
+0.01  Thu May 31 23:00:22 2001
+	- original version;
+
+0.02  Sat June 2 23:30:00 2001
+	- fixed inheritance. It just wasn't working for some reason.
+
