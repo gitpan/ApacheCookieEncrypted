@@ -1,6 +1,8 @@
 package Apache::Cookie::Encrypted;
-use Apache::Cookie;
-@Apache::Cookie::Encrypted::ISA = qw(Apache::Cookie);
+#use Apache::Cookie;
+use base qw(Apache::Cookie);
+
+require Apache;
 
 use strict;
 use warnings;
@@ -8,7 +10,14 @@ use Crypt::CBC;
 use Carp;
 use vars qw($VERSION $key);
 
-$VERSION = '0.02';
+$VERSION = '0.03';
+
+# get the encryption key
+
+BEGIN {
+    my $r = Apache->request;
+    $key = $r->dir_config('COOKIE_KEY');
+}
 
 # Our own constructor. Effectivly overrides the new constructor.
 
@@ -40,7 +49,7 @@ sub new {
     }
 
     # check for the key and place it in the proper variable
-    unless (defined ($key = $r->dir_config('COOKIE_KEY'))) {
+    unless ($key) {
 	if (exists($params->{-key})) {
 	    $key = $params->{-key};
 	    delete $params->{-key};
@@ -218,8 +227,8 @@ but also can take an I<Apache::Request> object:
 						-name    =>  'foo',
 						-value   =>  'bar',
 						-expires =>  '+3M',
-						-domain  =>  '.capricorn.com',
-						-path    =>  '/cgi-bin/database',
+						-domain  =>  '.myeboard.com',
+						-path    =>  '/',
 						-secure  =>  1
 						);
 
